@@ -40,6 +40,7 @@ To configure and build the project, run the script: `bash build.sh`
 <br /><br />
 <img src="resources/5.png" />
 <img src="resources/7.png" />
+<img src="resources/8.png" />
 </div>
 <br />
 

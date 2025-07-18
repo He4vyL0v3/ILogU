@@ -180,7 +180,6 @@ void writeSystemInfoToFile(const std::wstring& filePath) {
         out << L"Minor: " << osvi.dwMinorVersion << L"\n";
         out << L"Build: " << osvi.dwBuildNumber << L"\n";
         out << L"Platform: " << osvi.dwPlatformId << L"\n";
-        out << L"CSDVersion: " << std::wstring(std::begin(osvi.szCSDVersion), std::end(osvi.szCSDVersion)) << L"\n";
     }
 
     wchar_t computerName[MAX_COMPUTERNAME_LENGTH + 1];
