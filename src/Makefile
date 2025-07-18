@@ -5,7 +5,7 @@ RES = resource.o
 
 CXX = x86_64-w64-mingw32-g++
 CXXFLAGS = -std=c++11 -I mailio/
-LDFLAGS = -luser32 -static
+LDFLAGS = -luser32 -lwinhttp -static
 RC = x86_64-w64-mingw32-windres
 .PHONY: all clean build
 

