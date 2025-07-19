@@ -28,10 +28,17 @@ ILogU is a spyware program for Windows designed to intercept and log user keystr
 To configure and build the project, run the script: `bash build.sh`
 
 ![](resources/2.png)
-![](resources/3.png)
 ![alt text](resources/4.png)
 
-# Example
+## How it works
+
+1. On startup, creates the working directory and both log (`keylog.txt`) and system info (`info.txt`) files.
+2. Immediately collects and writes system information to `info.txt`.
+3. Starts a thread to periodically send both `keylog.txt` and `info.txt` to the Telegram bot (interval can be set in the configurator).
+4. Starts a separate thread to periodically update `info.txt` with fresh system information.
+5. The main thread starts the keylogger using WinAPI hooks.
+6. All keystrokes are saved to a file and (optionally) printed to the console.
+7. Both log and system info files are sent to the Telegram bot.
 
 <br />
 <br />
@@ -43,15 +50,6 @@ To configure and build the project, run the script: `bash build.sh`
 <img src="resources/8.png" />
 </div>
 <br />
-
-## How it works
-1. On startup, creates the working directory and both log (`keylog.txt`) and system info (`info.txt`) files.
-2. Immediately collects and writes system information to `info.txt`.
-3. Starts a thread to periodically send both `keylog.txt` and `info.txt` to the Telegram bot (interval can be set in the configurator).
-4. Starts a separate thread to periodically update `info.txt` with fresh system information.
-5. The main thread starts the keylogger using WinAPI hooks.
-6. All keystrokes are saved to a file and (optionally) printed to the console.
-7. Both log and system info files are sent to the Telegram bot.
 
 ## Project Roadmap
 - [ ] Cross-platform support

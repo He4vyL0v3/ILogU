@@ -10,6 +10,8 @@
 
 #define MY_MAX_PATH 260
 
+#pragma execution_character_set("utf-8")
+
 static char location[MY_MAX_PATH] = {0};
 static char last_name[MY_MAX_PATH] = {0};
 

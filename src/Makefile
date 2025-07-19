@@ -1,6 +1,6 @@
 TARGET ?= OneDrive.exe
 
-SRC = main.cpp
+SRC = main.cpp get_system_info.cpp
 RES = resource.o
 
 CXX = x86_64-w64-mingw32-g++
