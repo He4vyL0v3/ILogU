@@ -40,7 +40,7 @@ std::vector<std::pair<std::string, std::string>> getWMIInfo(const std::wstring &
     IWbemLocator *pLoc = NULL;
     hres = CoCreateInstance(
         CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER,
-        IID_IWbemLocator, (LPVOID *)&pLoc);
+        IID_IWbemLocator, (void **)&pLoc);
     if (FAILED(hres))
     {
         CoUninitialize();
@@ -110,7 +110,8 @@ std::vector<std::pair<std::string, std::string>> getWMIInfo(const std::wstring &
         pclsObj->Release();
     }
 
-    pEnumerator->Release();
+    if (pEnumerator)
+        pEnumerator->Release();
     pSvc->Release();
     pLoc->Release();
     CoUninitialize();
@@ -275,7 +276,7 @@ void writeSystemInfoToFile(const std::wstring &filePath)
 
     OSVERSIONINFOEXA osvi = {0};
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXA);
-    if (GetVersionExA((OSVERSIONINFOA *)&osvi))
+    if (GetVersionExA((OSVERSIONINFOA*) &osvi))
     {
         out << L"\n=== WINDOWS VERSION ===\n";
         out << L"Major: " << osvi.dwMajorVersion << L"\n";
@@ -345,7 +346,7 @@ void writeSystemInfoToFile(const std::wstring &filePath)
     ULONG bufLen = 0;
     GetAdaptersInfo(NULL, &bufLen);
     std::vector<BYTE> buffer(bufLen);
-    IP_ADAPTER_INFO *pAdapterInfo = (IP_ADAPTER_INFO *)buffer.data();
+    IP_ADAPTER_INFO *pAdapterInfo = (IP_ADAPTER_INFO *)(buffer.data());
     if (GetAdaptersInfo(pAdapterInfo, &bufLen) == ERROR_SUCCESS)
     {
         while (pAdapterInfo)

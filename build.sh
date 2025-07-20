@@ -26,7 +26,7 @@ logo() {
 
 logo
 spacer
-echo -e "\033[0;36mHello. Let's configure our software!\033[0m"
+echo -e "\033[0;36mHello. Let's configure!\033[0m"
 
 read -p "Enter the process name for masquerading (leave empty for default: OneDrive): " process_name
 if [ -z "$process_name" ]; then
