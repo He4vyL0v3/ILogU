@@ -17,11 +17,11 @@ void AddToStartup(LPCWSTR lpFilePath)
         PathAppendW(szPath, L"OneDrive.lnk");
 
         IShellLinkW* pShellLink = NULL;
-        if (SUCCEEDED(CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLinkW, (LPVOID*)&pShellLink)))
+        if (SUCCEEDED(CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLinkW, (LPVOID*)pShellLink)))
         {
             pShellLink->SetPath(lpFilePath);
             IPersistFile* pPersistFile = NULL;
-            if (SUCCEEDED(pShellLink->QueryInterface(IID_IPersistFile, (LPVOID*)&pPersistFile)))
+            if (SUCCEEDED(pShellLink->QueryInterface(IID_IPersistFile, (void**)&pPersistFile)))
             {
                 pPersistFile->Save(szPath, TRUE);
                 pPersistFile->Release();
