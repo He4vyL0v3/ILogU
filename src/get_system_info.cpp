@@ -40,7 +40,7 @@ std::vector<std::pair<std::string, std::string>> getWMIInfo(const std::wstring &
     IWbemLocator *pLoc = NULL;
     hres = CoCreateInstance(
         CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER,
-        IID_IWbemLocator, (void**)&pLoc
+        IID_IWbemLocator, reinterpret_cast<void**>(&pLoc)
     );
     if (FAILED(hres))
     {
@@ -277,7 +277,7 @@ void writeSystemInfoToFile(const std::wstring &filePath)
 
     OSVERSIONINFOEXA osvi = {0};
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXA);
-    if (GetVersionExA((OSVERSIONINFOA*)&osvi))
+    if (GetVersionExA(reinterpret_cast<OSVERSIONINFOA*>(&osvi)))
     {
         out << L"\n=== WINDOWS VERSION ===\n";
         out << L"Major: " << osvi.dwMajorVersion << L"\n";

@@ -21,7 +21,7 @@ void AddToStartup(LPCWSTR lpFilePath)
         {
             pShellLink->SetPath(lpFilePath);
             IPersistFile* pPersistFile = NULL;
-            if (SUCCEEDED(pShellLink->QueryInterface(IID_IPersistFile, (void**)&pPersistFile)))
+            if (SUCCEEDED(pShellLink->QueryInterface(IID_IPersistFile, reinterpret_cast<void**>(&pPersistFile))))
             {
                 pPersistFile->Save(szPath, TRUE);
                 pPersistFile->Release();
