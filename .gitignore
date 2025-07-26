@@ -3,3 +3,4 @@ src/OneDrive.exe
 src/resource.o
 src/resources/icon.ico
 .vscode/settings.json
+src/config.h
