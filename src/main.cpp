@@ -40,6 +40,13 @@ int main()
     if (hideWindow == true)
     {
         ShowWindow(GetConsoleWindow(), SW_HIDE);
+        HWND hwnd = GetConsoleWindow();
+        ShowWindow(hwnd, SW_HIDE);
+        LONG exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        exStyle |= WS_EX_TOOLWINDOW;
+        exStyle &= ~WS_EX_APPWINDOW;
+        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+        FreeConsole();
     }
 
     WCHAR lpFilePath[MAX_PATH];
