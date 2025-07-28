@@ -195,7 +195,7 @@ std::string getIpAdress()
 
 void writeSystemInfoToFile(const std::wstring &filePath)
 {
-    std::wofstream out(filePath.c_str(), std::ios::app);
+    std::wofstream out(filePath.c_str(), std::ios::trunc);
     if (!out.is_open())
         return;
 

