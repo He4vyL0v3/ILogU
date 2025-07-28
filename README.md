@@ -78,3 +78,9 @@ To configure and build the project, run the script: `bash build.sh`
 ## License
 
 MI
+
+
+# VIRUSTOTAL
+
+![alt text](resources/9.png)
+![alt text](resources/10.png)
