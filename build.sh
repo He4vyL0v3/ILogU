@@ -102,7 +102,7 @@ done
 
 log_to_file=$(ask_yes_no "Save data to file?" "y")
 
-hide_window=$(ask_yes_no "Show debug window? (Selecting 'no' will hide it)" "n")
+hide_window=$(ask_yes_no "Hide debug window?" "n")
 
 log_to_console=$(ask_yes_no "Print output to console?" "y")
 
