@@ -5,3 +5,5 @@ src/resources/icon.ico
 .vscode/settings.json
 src/config.h
 src/2config.h
+src/version.o
+src/resources/resource.o

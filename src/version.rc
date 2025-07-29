@@ -1,0 +1,30 @@
+#include <windows.h>
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 25,122,624
+ PRODUCTVERSION 25,122,0624,0004
+ FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+ FILEFLAGS 0
+ FILEOS VOS__WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE 0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "Microsoft Corporation"
+            VALUE "FileDescription", "Microsoft OneDrive"
+            VALUE "FileVersion", "25.122.624"
+            VALUE "InternalName", "OneDrive.exe"
+            VALUE "LegalCopyright", "© Microsoft Corporation. All rights reserved."
+            VALUE "OriginalFilename", "OneDrive.exe"
+            VALUE "ProductName", "Microsoft OneDrive"
+            VALUE "ProductVersion", "25.122.0624.0004"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

