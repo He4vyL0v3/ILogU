@@ -2,7 +2,7 @@
 <img src="resources/1.png" />
 <br /><br />
 
-# ILogU
+# IStealU
 
 ## Description
 
