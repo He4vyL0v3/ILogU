@@ -6,7 +6,7 @@
 
 ## Description
 
-ILogU is a spyware program for Windows designed to intercept and log user keystrokes, as well as send logs to Telegram via the Telegram API.
+IStealU is a spyware program for Windows designed to intercept and log user keystrokes, as well as send logs to Telegram via the Telegram API.
 
 ## Main Features
 
