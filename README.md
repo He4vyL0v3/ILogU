@@ -63,6 +63,7 @@ To configure and build the project, run the script: `bash build.sh`
 - [ ] Screenshot creation
 - [x] Sending system and environment information (info.txt)
 - [ ] Remote keylogger control via Telegram bot
+- [x] Working with clipboard
 
 ## Dependencies and Build Notes
 
@@ -77,8 +78,7 @@ To configure and build the project, run the script: `bash build.sh`
 
 ## License
 
-MI
-
+MIT
 
 # VIRUSTOTAL
 
